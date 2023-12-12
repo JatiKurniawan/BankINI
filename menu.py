@@ -1,5 +1,5 @@
 import os
-import pyfiglet
+from pyfiglet import Figlet
 
 from user import User
 from customer import Customer
@@ -22,3 +22,7 @@ def menu(list):
     choice = int(input('Masukkan pilihan anda : '))
     return choice
 
+
+
+f = Figlet(font='slant')
+print(f.renderText('Bank INI'))
