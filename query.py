@@ -27,6 +27,24 @@ class Query():
         self.cursor.execute('SELECT * FROM tipe_akun')
         return self.cursor.fetchall()
     
-    def konfirmasiPenarikan(self):
+    def informasiPenarikan(self):
         self.cursor.execute(f'SELECT * FROM list_withdraw WHERE status="False" ')
         return self.cursor.fetchall()
+    
+    def konfirmasiPenarikan(self,id,jumlah_penarikan):
+        self.cursor.execute(f"DELETE from list_withdraw where id='{id}' ")
+        self.cursor.execute(f"UPDATE list_withdraw SET saldo-='{jumlah_penarikan}' WHERE id='{id}' ")
+        return True
+    
+    def cekSaldo(self, id):
+        self.cursor.execute(f"SELECT * FROM user WHERE id='{id}'")
+        return self.cursor.fetchone()
+    
+    def cariAkunCust(self, id):
+        self.cursor.execute(f"SELECT * FROM user WHERE id='{id}' ")
+        return self.cursor.fetchone()
+
+    def buatakunTeller(self):
+        self.cursor.execute(f"INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe ) VALUES (%s, %s, %s, %s, %s, %s, %s,)", )
+        return True
+        
