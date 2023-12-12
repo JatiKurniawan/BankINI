@@ -1,5 +1,7 @@
 import random
-import datetime
+from query import Query
+
+database = Query()
 
 class User:
     def __init__(self):
@@ -26,7 +28,10 @@ class User:
         id = int(input('Masukkan ID Anda : '))
         password = str(input('Masukkan Password Anda : '))
 
-        return id, password
+        check = database.login(id, password)
+        if check:
+            return check
+        return False
     
     def logout(self):
         return False
