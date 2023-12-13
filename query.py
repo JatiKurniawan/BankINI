@@ -10,41 +10,62 @@ class Query():
         self.cursor = None
     
     def connection(self, host, user, password, database):
-        self.connect = mysql.connector.connect(host = host, user = user, passwd = password, database = database)
         self.host = host
         self.user = user
         self.password = password
         self.database = database
-        print('hallo')
-
+        self.connect = mysql.connector.connect(host = host, user = user, passwd = password, database = database)
         self.cursor = self.connect.cursor()
+        return True
 
     def login(self, id, password):
         self.cursor.execute(f'SELECT * FROM user WHERE id="{id}" and password="{password}"')
         return self.cursor.fetchone()
+
+    def register(self, data):
+        self.cursor.execute(f'SELECT * FROM user WHERE id="{data[0]}"')
+        check = self.cursor.fetchone()
+        if check:
+            return 'Id Sudah Terdaftar, Silahkan Masuk ke Akun anda'
+        self.cursor.execute(f'INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe) VALUES ("{data[0]}", "{data[1]}", "{data[2]}", "{data[3]}", "0", "0", "34521")')
+        self.connect.commit()
+        return True
 
     def tipeAkun(self):
         self.cursor.execute('SELECT * FROM tipe_akun')
         return self.cursor.fetchall()
     
     def informasiPenarikan(self):
-        self.cursor.execute(f'SELECT * FROM list_withdraw WHERE status="False" ')
+        self.cursor.execute(f'SELECT * FROM list_withdraw WHERE status=0')
         return self.cursor.fetchall()
     
-    def konfirmasiPenarikan(self,id,jumlah_penarikan):
-        self.cursor.execute(f"DELETE from list_withdraw where id='{id}' ")
-        self.cursor.execute(f"UPDATE list_withdraw SET saldo-='{jumlah_penarikan}' WHERE id='{id}' ")
+    def konfirmasiPenarikan(self, id, jumlah_penarikan):
+        self.cursor.execute(f"DELETE FROM list_withdraw WHERE id='{id}' ")
+        self.connect.commit()
+        self.cursor.execute(f"UPDATE user SET saldo = saldo - %s WHERE id=%s", (jumlah_penarikan, id))
+        self.connect.commit()
         return True
     
     def cekSaldo(self, id):
-        self.cursor.execute(f"SELECT * FROM user WHERE id='{id}'")
+        self.cursor.execute(f"SELECT saldo FROM user WHERE id='{id}'")
         return self.cursor.fetchone()
     
-    def cariAkunCust(self, id):
+    def cariAkunCustomer(self, id):
         self.cursor.execute(f"SELECT * FROM user WHERE id='{id}' ")
         return self.cursor.fetchone()
 
     def buatakunTeller(self):
-        self.cursor.execute(f"INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe ) VALUES (%s, %s, %s, %s, %s, %s, %s,)", )
+        self.cursor.execute(f"INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe ) VALUES (%s, %s, %s, %s, %s, %s, %s)", )
         return True
-        
+    
+    def deposito(self, id, jumlah):
+        self.cursor.execute(f'UPDATE user SET saldo = saldo + %s WHERE id = %s', (jumlah, id))
+        self.connect.commit()
+
+    def withdraw(self, id, saldo, data, pin):
+        if data[1] == pin:
+            self.cursor.execute(f'INSERT INTO list_withdraw (id, saldo, amount, status ) VALUES(%s, %s, %s, %s)', (id, saldo, data[0], False))
+            self.connect.commit()
+            print('Penarikan saldo membutuhkan konfirmasi teller, Harap menunggu Konfirmasi')
+        else:
+            print('Pin yang anda masukkan Salah')

@@ -1,20 +1,27 @@
 from user import User
 from query import Query
 
-db = Query()
+database = Query()
+database.connection('localhost', 'root', '', 'bank_ini')
+
 
 class Teller(User):
     def __init__(self):
         super().__init__()
-    
+
     def checkSaldoCustomer(self):
         id = input("Id = ")
-        cek = db.cekSaldo(id)
+        cek = database.cekSaldo(id)
 
     def konfirmasiPenarikan(self):
-        penarikan = db.konfirmasiPenarikan()
+        penarikan = database.informasiPenarikan()
         for i in penarikan:
-            print (f"ID : {penarikan[0]}, amount:{penarikan[2]}")
-            konfirm= input("Konfirmasi penarikan ini? [Y/T]: ")
-            if konfirm.lower == "Y":
-                self.cursor.execute("DELETE from list_whitdraw where id={penarikan[0]} ")
+            print('=====================================')
+            print(f'ID Customer         : {i[0]}')
+            print(f'Withdraw Amount     : {i[2]}')
+            print(f'Saldo Customer      : {i[1]}')
+            confirm = str(input('Konfirmasi ? : '))
+            if confirm.lower() == 'yes':
+                database.konfirmasiPenarikan(i[0], i[2])
+        
+                
