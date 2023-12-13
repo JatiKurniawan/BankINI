@@ -22,6 +22,10 @@ class Query():
         self.cursor.execute(f'SELECT * FROM user WHERE id="{id}" and password="{password}"')
         return self.cursor.fetchone()
 
+    def tambahAkun(self, data):
+        self.cursor.execute(f'INSERT INTO list_registrasi (id, nama, pin, password, status) VALUES ("{data[0]}", "{data[1]}", "{data[2]}", "{data[3]}", "False")')
+        self.connect.commit()
+
     def register(self, data):
         self.cursor.execute(f'SELECT * FROM user WHERE id="{data[0]}"')
         check = self.cursor.fetchone()
@@ -30,10 +34,6 @@ class Query():
         self.cursor.execute(f'INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe) VALUES ("{data[0]}", "{data[1]}", "{data[2]}", "{data[3]}", "0", "0", "34521")')
         self.connect.commit()
         return True
-
-    def tipeAkun(self):
-        self.cursor.execute('SELECT * FROM tipe_akun')
-        return self.cursor.fetchall()
     
     def informasiPenarikan(self):
         self.cursor.execute(f'SELECT * FROM list_withdraw WHERE status=0')
@@ -46,6 +46,10 @@ class Query():
         self.connect.commit()
         return True
     
+    def dataAkun(self):
+        self.cursor.execute('SELECT * FROM user WHERE id_tipe=34521')
+        return self.cursor.fetchall()
+
     def cekSaldo(self, id):
         self.cursor.execute(f"SELECT saldo FROM user WHERE id='{id}'")
         return self.cursor.fetchone()
@@ -54,9 +58,9 @@ class Query():
         self.cursor.execute(f"SELECT * FROM user WHERE id='{id}' ")
         return self.cursor.fetchone()
 
-    def buatakunTeller(self):
-        self.cursor.execute(f"INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe ) VALUES (%s, %s, %s, %s, %s, %s, %s)", )
-        return True
+    def buatakunTeller(self, data):
+        self.cursor.execute(f"INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe ) VALUES (%s, %s, %s, %s, 0, 0, 11150)", (data[0], data[1], data[2], data[3]))
+        self.connect.commit()
     
     def deposito(self, id, jumlah):
         self.cursor.execute(f'UPDATE user SET saldo = saldo + %s WHERE id = %s', (jumlah, id))
@@ -69,3 +73,13 @@ class Query():
             print('Penarikan saldo membutuhkan konfirmasi teller, Harap menunggu Konfirmasi')
         else:
             print('Pin yang anda masukkan Salah')
+
+    def informasiRegistrasi(self):
+        self.cursor.execute('SELECT * FROM list_registrasi WHERE status=0')
+        return self.cursor.fetchall()
+    
+    def konfirmasiRegistrasi(self, data):
+        self.cursor.execute(f'DELETE FROM list_registrasi WHERE id="{data[0]}"')
+        self.connect.commit()
+        self.cursor.execute(f'INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe) VALUES (%s, %s, %s, %s, 0, 0, 34521)', (data[0], data[1], data[2], data[3]))
+        self.connect.commit()

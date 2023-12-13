@@ -1,10 +1,12 @@
 import os
 from pyfiglet import Figlet
 
+from query import Query
+
 from user import User
 from customer import Customer
 from teller import Teller
-from query import Query
+from admin import Admin
 
 database = Query()
 database.connection('localhost', 'root', '', 'bank_ini')
@@ -12,12 +14,12 @@ database.connection('localhost', 'root', '', 'bank_ini')
 dataUser = User()
 dataCustomer = Customer()
 dataTeller = Teller()
+dataAdmin = Admin()
 
 
 listMenuCustomer = ['Setor Tunai', 'Penarikan Tunai', 'Informasi Saldo', 'Informasi Akun']
 listMenuTeller = ['Konfirmasi Penarikan', 'Cari Akun Customer']
-listMenuAdmin = ['History', 'Cari Akun Customer', 'Buat Akun Teller', 'Konfirmasi Registrasi']
-
+listMenuAdmin = ['Cari Akun Customer', 'Buat Akun Teller', 'Konfirmasi Registrasi']
 
 
 def menu(list):
@@ -51,23 +53,42 @@ def mainMenu():
                     elif choiceCustomer == 4:
                         data = database.cariAkunCustomer(login[0])
                         dataCustomer.checkAkun(data)
-                        
-
+                    elif choiceCustomer == 0:
+                        return False
+                    
             elif login[6] == 98710:
-                print(login[0])
-                choiceTeller = menu(listMenuTeller)
-                if choiceTeller == 1:
-                    dataTeller.konfirmasiPenarikan()
+                while True:
+                    choiceTeller = menu(listMenuTeller)
+                    if choiceTeller == 1:
+                        dataTeller.konfirmasiPenarikan()
+                    elif choiceTeller == 2:
+                        id = dataTeller.printIdCustomer()
+                        data = database.cariAkunCustomer(id)
+                        dataTeller.checkCustomer(data)
+                    elif choiceTeller == 0:
+                        return False
 
             elif login[6] == 11150:
-                menu(listMenuAdmin)
+                while True:
+                    choiceAdmin = menu(listMenuAdmin)
+                    if choiceAdmin == 1:
+                        id = dataAdmin.printIdCustomer()
+                        data = database.cariAkunCustomer(id)
+                        dataAdmin.checkCustomer(data)
+                    elif choiceAdmin == 2:
+                        data = dataAdmin.akunTeller()
+                        database.buatakunTeller(data)
+                    elif choiceAdmin == 3:
+                        data = database.informasiRegistrasi()
+                        dataAdmin.konfirmasiRegistrasi(data)
+
         else:
             print('\nPassword atau Username Salah')
             signup = str(input('Buat Akun? <y/n>'))
             if signup.lower() == 'y':
                 dataSign = dataUser.inputData()
-                print(dataSign)
-                database.register(dataSign)
+                database.tambahAkun(dataSign)
                 dataUser.printInfo(dataSign)
+                print('\nPembuatan akun membutuhkan konfirmasi Admin Bank. Harap Menunggu Konfirmasi\n')
     
 mainMenu()
