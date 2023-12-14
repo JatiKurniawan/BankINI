@@ -9,8 +9,8 @@ class User:
     def __init__(self):
         self.id = None
         self.nama = None
-        self.pin = None
-        self.password = None
+        self._pin = None
+        self.__password = None
 
     def generateId(self):
         listId = []
@@ -23,10 +23,10 @@ class User:
     def inputData(self):
         self.id = self.generateId()
         self.nama = str(input('Masukkan Nama Anda : '))
-        self.pin = int(input('Masukkan Pin yang anda inginkan : '))
-        self.password = str(input('Masukkan Password Anda : '))
+        self._pin = int(input('Masukkan Pin yang anda inginkan : '))
+        self.__password = str(input('Masukkan Password Anda : '))
 
-        return self.id, self.nama, self.pin, self.password
+        return self.id, self.nama, self._pin, self.__password
     
     def printInfo(self, data):
         print('\nInformasi Akun')
