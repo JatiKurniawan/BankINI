@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2023 at 01:43 PM
+-- Generation Time: Dec 14, 2023 at 03:37 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -29,9 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `list_registrasi` (
   `id` int(11) NOT NULL,
-  `nama` int(11) NOT NULL,
+  `nama` varchar(255) NOT NULL,
   `pin` int(11) NOT NULL,
-  `password` int(11) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -43,9 +43,17 @@ CREATE TABLE `list_registrasi` (
 
 CREATE TABLE `list_withdraw` (
   `id` int(11) NOT NULL,
+  `saldo` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `list_withdraw`
+--
+
+INSERT INTO `list_withdraw` (`id`, `saldo`, `amount`, `status`) VALUES
+(14621, 290000, 50000, 0);
 
 -- --------------------------------------------------------
 
@@ -75,13 +83,25 @@ INSERT INTO `tipe_user` (`id`, `tipe_user`) VALUES
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `nama` int(11) NOT NULL,
+  `nama` varchar(255) NOT NULL,
   `pin` int(11) NOT NULL,
-  `password` int(11) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `saldo` int(11) NOT NULL,
   `saving` int(11) NOT NULL,
   `id_tipe` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `nama`, `pin`, `password`, `saldo`, `saving`, `id_tipe`) VALUES
+(14621, 'Suliah', 252312, 'Widan anjing', 290000, 0, 34521),
+(21126, 'vincent', 918221, 'hallo', 40000, 0, 34521),
+(46387, 'Diki', 19284, 'cuk', 0, 0, 98710),
+(47883, 'diki', 129083, 'wow', 0, 0, 11150),
+(84995, 'widan', 198431, 'asu', 0, 0, 34521),
+(98232, 'Jati', 983212, 'hmm', 0, 0, 11150);
 
 --
 -- Indexes for dumped tables
