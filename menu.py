@@ -60,7 +60,7 @@ def mainMenu():
                         data = database.cariAkunCustomer(login[0])
                         change = dataCustomer.checkAkun(data)
                         if change:
-                            print(dataUser.passChanger(change))
+                            dataUser.passChanger(change)
                     elif choiceCustomer == 0:
                         return dataUser.logout()
                     
