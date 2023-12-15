@@ -4,7 +4,7 @@ class Customer(User):
     def __init__(self):
         super().__init__()
         self.saldo = None
-        self.saving = None
+        self.__saving = None
 
     def inputData(self, data):
         self.saldo = data[4]
@@ -25,20 +25,32 @@ class Customer(User):
         print(f'Password = {data[3]}')
         print('=====================================\n')
 
+        change = str(input('Ubah Password ? <yes/no> : '))
+        if change.lower() == 'yes' :
+            newPass = str(input('Masukkan Password baru Anda : '))
+            return newPass
+
     def deposito(self):
         print(f'Saldo Anda Sekarang : Rp {self.saldo}')
         deposito = int(input('Jumlah Deposito : Rp '))
         self.saldo = self.saldo + deposito
         return deposito
 
-    def savingMoney(self):
-        print('saving')
-
     def withdraw(self):
         print(f'Saldo Anda Sekarang : Rp {self.saldo}')
         withdraw = int(input('Jumlah Penarikan : Rp '))
         pin = int(input('Masukkan Pin anda : '))
         return withdraw, pin
+    
+    def savingMoney(self):
+        print(f'Saldo Anda Sekarang : Rp {self.saldo}')
+        print(f'Saldo Tabungan Anda Sekarang : Rp {self.saving}')
+        print('Note : Jumlah maksimal Tabungan adalah 75% dari total saldo')
+        saving = int(input('Jumlah Tabungan : Rp '))
+        if saving < (self.saldo*75/100):
+            pin = int(input('Masukkan Pin anda : '))
+            return saving, pin
+        print('Jumlah tabungan yang Anda masukkan terlalu besar')
     
     def register(self):
         print('register')

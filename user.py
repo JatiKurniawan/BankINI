@@ -49,5 +49,17 @@ class User:
             return check
         return False
     
+    def passChanger(self, new):
+        self.changePassword = new
+        database.changePassword(new, self.id)
+    
+    @property
+    def changePassword(self):
+        return self.__password
+    @changePassword.setter
+    def changePassword(self, newPass):
+        self.__password = newPass
+
     def logout(self):
         return False
+

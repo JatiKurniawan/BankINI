@@ -17,7 +17,7 @@ dataTeller = Teller()
 dataAdmin = Admin()
 
 
-listMenuCustomer = ['Setor Tunai', 'Penarikan Tunai', 'Informasi Saldo', 'Informasi Akun']
+listMenuCustomer = ['Setor Tunai', 'Penarikan Tunai', 'Menabung',  'Informasi Saldo', 'Informasi Akun']
 listMenuTeller = ['Konfirmasi Penarikan', 'Cari Akun Customer']
 listMenuAdmin = ['Cari Akun Customer', 'Buat Akun Teller', 'Konfirmasi Registrasi']
 
@@ -48,13 +48,21 @@ def mainMenu():
                         withdraw = dataCustomer.withdraw()
                         database.withdraw(login[0], dataCustomer.saldo, withdraw, login[2])
                     elif choiceCustomer == 3:
+                        saving = dataCustomer.savingMoney()
+                        if saving:
+                            database.savingMoney([login[0], login[2]], saving)
+                        else:
+                            pass
+                    elif choiceCustomer == 4:
                         saldo = database.cekSaldo(login[0])
                         dataCustomer.checkSaldo([login[0], login[1], saldo])
-                    elif choiceCustomer == 4:
+                    elif choiceCustomer == 5:
                         data = database.cariAkunCustomer(login[0])
-                        dataCustomer.checkAkun(data)
+                        change = dataCustomer.checkAkun(data)
+                        if change:
+                            print(dataUser.passChanger(change))
                     elif choiceCustomer == 0:
-                        return False
+                        return dataUser.logout()
                     
             elif login[6] == 98710:
                 while True:
@@ -66,7 +74,7 @@ def mainMenu():
                         data = database.cariAkunCustomer(id)
                         dataTeller.checkCustomer(data)
                     elif choiceTeller == 0:
-                        return False
+                        return dataUser.logout()
 
             elif login[6] == 11150:
                 while True:
@@ -81,6 +89,8 @@ def mainMenu():
                     elif choiceAdmin == 3:
                         data = database.informasiRegistrasi()
                         dataAdmin.konfirmasiRegistrasi(data)
+                    elif choiceAdmin == 0:
+                        return dataUser.logout()
 
         else:
             print('\nPassword atau Username Salah')

@@ -35,6 +35,10 @@ class Query():
         self.connect.commit()
         return True
     
+    def changePassword(self, new, id):
+        self.cursor.execute(f'UPDATE user SET password = "{new}" WHERE id = "{id}"')
+        self.connect.commit()
+    
     def informasiPenarikan(self):
         self.cursor.execute(f'SELECT * FROM list_withdraw WHERE status=0')
         return self.cursor.fetchall()
@@ -83,3 +87,10 @@ class Query():
         self.connect.commit()
         self.cursor.execute(f'INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe) VALUES (%s, %s, %s, %s, 0, 0, 34521)', (data[0], data[1], data[2], data[3]))
         self.connect.commit()
+
+    def savingMoney(self, data, saving):
+        if data[1] == saving[1]:
+            self.cursor.execute(f'UPDATE user SET saldo = saldo - "{saving[0]}", saving = saving + "{saving[0]}" WHERE id = "{data[0]}"')
+            self.connect.commit()
+        else:
+            print('Pin yang anda masukkan Salah')
