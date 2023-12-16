@@ -63,7 +63,7 @@ class Query():
         return self.cursor.fetchone()
 
     def buatakunTeller(self, data):
-        self.cursor.execute(f"INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe ) VALUES (%s, %s, %s, %s, 0, 0, 11150)", (data[0], data[1], data[2], data[3]))
+        self.cursor.execute(f"INSERT INTO user (id, nama, pin, password, saldo, saving, id_tipe ) VALUES (%s, %s, %s, %s, 0, 0, 98710)", (data[0], data[1], data[2], data[3]))
         self.connect.commit()
     
     def deposito(self, id, jumlah):

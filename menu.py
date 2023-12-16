@@ -32,7 +32,6 @@ def menu(list):
 
 def mainMenu():
     while True:
-        # os.system(('cls'))
         f = Figlet(font='slant')
         print(f.renderText('Bank INI'))
         login = dataUser.login()
